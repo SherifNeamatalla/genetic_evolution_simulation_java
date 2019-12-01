@@ -4,8 +4,9 @@ import creatures.model.CreatureChromosome;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import simulation.Simulator;
+import simulation.model.SimulationConfiguration;
 import simulation.model.SimulationResult;
-import view.helper.CreatureChromosomeTextValue;
+import view.helper.TextValueExtractor;
 
 public class MainView extends BorderPane {
 
@@ -34,12 +35,19 @@ public class MainView extends BorderPane {
 
   public void refreshSidebar(SimulationResult simulationResult) {
     this.appSidebar.setBestPlaceText(
-        CreatureChromosomeTextValue.getTextValue(simulationResult.getBestCreature()));
+        TextValueExtractor.getChromosomeTextValue(simulationResult.getBestCreature()));
     this.appSidebar.setAveragePlaceText(
-        CreatureChromosomeTextValue.getTextValue(simulationResult.getAverageCreature()));
+        TextValueExtractor.getChromosomeTextValue(simulationResult.getAverageCreature()));
 
     this.appSidebar.setWorstPlaceText(
-        CreatureChromosomeTextValue.getTextValue(simulationResult.getWorstCreature()));
+        TextValueExtractor.getChromosomeTextValue(simulationResult.getWorstCreature()));
+    this.appSidebar.setGeneralInformationText(
+        TextValueExtractor.getSimulationResultTextValue(simulationResult));
+  }
+
+  public void refreshSidebarConfigurationTextValue(SimulationConfiguration simulationConfiguration){
+    this.appSidebar.setSimulationConfigurationText(
+            TextValueExtractor.getSimulationConfigurationTextValue(simulationConfiguration));
   }
 
   public void connect(Simulator simulator) {

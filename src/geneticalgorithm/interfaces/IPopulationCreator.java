@@ -21,13 +21,13 @@ public interface IPopulationCreator {
 
     List<CreatureChromosome> newPopulation = new ArrayList<>();
     population.sort(Comparator.comparing(scoreEvaluator::evaluateChromosome).reversed());
-    newPopulation.add(population.get(0));
-    newPopulation.add(population.get(1));
 
     while (newPopulation.size() < creaturesCount) {
       Collections.shuffle(population);
 
-      for (int i = 0; i < population.size() - 1 && newPopulation.size() < creaturesCount; i++,i++) {
+      for (int i = 0;
+          i < population.size() - 1 && newPopulation.size() < creaturesCount;
+          i++, i++) {
         var parent1 = population.get(i);
         var parent2 = population.get((i + 1));
 

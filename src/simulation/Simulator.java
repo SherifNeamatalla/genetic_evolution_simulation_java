@@ -13,23 +13,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import simulation.helper.FoodGenerator;
+import simulation.model.SimulationConfiguration;
 import simulation.model.SimulationResult;
 import view.MainView;
 
 public class Simulator {
-
-  private static final int TICKS_PER_ROUND = 15;
-  private static final int GENERATIONS = 500;
-  private static final int POPULATION_COUNT = 30;
-
-  private static final double MUTATION_RATE = 0.2;
-
-  private static final double CROSSOVER_RATE = 0.7;
-
-  private static final double TOP_SURVIVORS_PERCENTAGE = 0.8;
-  private static final int TICK_PER_SECOND = 1;
-
-  private static final int FOOD_COUNT = 15;
 
   private Timeline timeline;
 
@@ -39,10 +27,13 @@ public class Simulator {
 
   private SimulationResult simulationResult;
 
+  private SimulationConfiguration simulationConfiguration;
+
   private int generationsCount = 1;
 
-  public Simulator(MainView mainView) {
+  public Simulator(MainView mainView, SimulationConfiguration simulationConfiguration) {
     this.mainView = mainView;
+    this.simulationConfiguration = simulationConfiguration;
     this.algorithmController =
         new AlgorithmController(
             new CreaturePopulationCreator(),
@@ -54,16 +45,17 @@ public class Simulator {
     this.simulationResult =
         this.algorithmController.getNextGeneration(
             generationsCount,
-            POPULATION_COUNT,
-            MUTATION_RATE,
-            CROSSOVER_RATE,
-            TOP_SURVIVORS_PERCENTAGE,
+            simulationConfiguration.getStartPopulationCount(),
+            simulationConfiguration.getMutationRate(),
+            simulationConfiguration.getCrossoverRate(),
+            0,
             null);
-    this.simulationResult.setFood(FoodGenerator.generateFood(FOOD_COUNT));
+    this.simulationResult.setFood(
+        FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
 
     KeyFrame keyFrame =
         new KeyFrame(
-            Duration.millis(TICK_PER_SECOND * 1000),
+            Duration.millis(simulationConfiguration.getTicksPerSecond() * 1000),
             actionEvent -> {
               this.simulationResult
                   .getPopulation()
@@ -77,27 +69,27 @@ public class Simulator {
     this.mainView.connect(this);
 
     this.timeline = new Timeline(keyFrame);
-    this.timeline.setCycleCount(TICKS_PER_ROUND);
+    this.timeline.setCycleCount(simulationConfiguration.getTicksPerRound());
     this.timeline.setOnFinished(this::onSimulationDone);
     this.mainView.draw(this.simulationResult);
     this.mainView.refreshSidebar(this.simulationResult);
+    this.mainView.refreshSidebarConfigurationTextValue(this.simulationConfiguration);
   }
 
   private void onSimulationDone(ActionEvent actionEvent) {
     this.simulationResult =
         this.algorithmController.getNextGeneration(
             generationsCount,
-            POPULATION_COUNT,
-            MUTATION_RATE,
-            CROSSOVER_RATE,
-            TOP_SURVIVORS_PERCENTAGE,
+            simulationConfiguration.getStartPopulationCount(),
+            simulationConfiguration.getMutationRate(),
+            simulationConfiguration.getCrossoverRate(),
+            0,
             this.simulationResult.getPopulation());
 
     this.mainView.refreshSidebar(this.simulationResult);
 
     for (CreatureChromosome creatureChromosome : this.simulationResult.getPopulation()) {
-      creatureChromosome.setEnergy(
-              CreatureGeneConstants.MAX_ENERGY);
+      creatureChromosome.setEnergy(CreatureGeneConstants.MAX_ENERGY);
       creatureChromosome.setFoodCount(0);
     }
   }
@@ -108,7 +100,8 @@ public class Simulator {
     this.generationsCount = generationsCount;
     for (CreatureChromosome creatureChromosome : this.simulationResult.getPopulation()) {
       creatureChromosome.setPosition(PositionCreator.buildRandomPosition());
-      this.simulationResult.setFood(FoodGenerator.generateFood(FOOD_COUNT));
+      this.simulationResult.setFood(
+          FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
     }
     this.timeline.play();
   }

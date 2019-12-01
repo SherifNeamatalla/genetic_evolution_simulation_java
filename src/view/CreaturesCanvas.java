@@ -60,6 +60,12 @@ public class CreaturesCanvas extends Canvas {
         creature.getPosition().getY(),
         CreatureGeneConstants.CREATURE_RADIUS,
         CreatureGeneConstants.CREATURE_RADIUS);
+
+    gc.setFill(Color.AQUA);
+    gc.fillText(
+        creature.getCreatureName(),
+        creature.getPosition().getX(),
+        creature.getPosition().getY() +40);
   }
 
   public void drawFood(Food food) {

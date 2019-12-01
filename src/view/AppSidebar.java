@@ -12,10 +12,18 @@ public class AppSidebar extends VBox {
 
   private String worstPlaceText;
 
+  private String generalInformationText;
+
+  private String simulationConfigurationText;
+
   private TextArea bestTextArea;
   private TextArea averageTextArea;
 
   private TextArea worstTextArea;
+
+  private TextArea generalInformationTextArea;
+
+  private TextArea simulationConfigurationTextArea;
 
   private MainView mainView;
 
@@ -25,10 +33,18 @@ public class AppSidebar extends VBox {
     this.bestTextArea = new TextArea();
     this.averageTextArea = new TextArea();
     this.worstTextArea = new TextArea();
+    this.generalInformationTextArea = new TextArea();
+    this.simulationConfigurationTextArea = new TextArea();
 
     this.bestTextArea.setDisable(true);
     this.averageTextArea.setDisable(true);
     this.worstTextArea.setDisable(true);
+    this.generalInformationTextArea.setDisable(true);
+    this.simulationConfigurationTextArea.setDisable(true);
+
+
+    this.getChildren().add(new Label("Simulation configuration "));
+    this.getChildren().add(simulationConfigurationTextArea);
 
     this.getChildren().add(new Label("Best "));
     this.getChildren().add(bestTextArea);
@@ -38,6 +54,9 @@ public class AppSidebar extends VBox {
 
     this.getChildren().add(new Label("Worst "));
     this.getChildren().add(worstTextArea);
+
+    this.getChildren().add(new Label("General Information "));
+    this.getChildren().add(generalInformationTextArea);
   }
 
   public void setBestPlaceText(String bestPlaceText) {
@@ -50,5 +69,13 @@ public class AppSidebar extends VBox {
 
   public void setWorstPlaceText(String worstPlaceText) {
     this.worstTextArea.setText(worstPlaceText);
+  }
+
+  public void setGeneralInformationText(String generalInformation) {
+    this.generalInformationTextArea.setText(generalInformation);
+  }
+
+  public void setSimulationConfigurationText(String simulationConfiguration) {
+    this.simulationConfigurationTextArea.setText(simulationConfiguration);
   }
 }
