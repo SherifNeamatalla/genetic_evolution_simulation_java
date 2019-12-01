@@ -64,6 +64,9 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectId" id="1UNV7Al27ejD0NXwWWhoniAXVpj" />
   <component name="ProjectReloadState">
@@ -192,7 +195,7 @@
       <updated>1359379246138</updated>
       <workItem from="1359379250712" duration="1302000" />
       <workItem from="1575196875553" duration="23794000" />
-      <workItem from="1575229713162" duration="9606000" />
+      <workItem from="1575229713162" duration="9862000" />
     </task>
     <servers />
   </component>
