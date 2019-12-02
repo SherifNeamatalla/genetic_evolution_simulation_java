@@ -43,7 +43,10 @@ public class CreaturesCanvas extends Canvas {
 
     gc.setFill(Color.BLACK);
     if (creature.getEnergy() <= 0) gc.setFill(Color.RED);
-    else if (creature.getFoodCount() > 0) gc.setFill(Color.BLUE);
+    else if (creature.getFoodCount() > 0 && creature.getEnergy() > CreatureGeneConstants.MAX_ENERGY/2)
+      gc.setFill(Color.SILVER);
+    else if (creature.getFoodCount() > 0 )
+      gc.setFill(Color.BLUE);
     gc.fillText(
         ""
             + String.format("%.2f", creature.getEnergy())
@@ -65,7 +68,7 @@ public class CreaturesCanvas extends Canvas {
     gc.fillText(
         creature.getCreatureName(),
         creature.getPosition().getX(),
-        creature.getPosition().getY() +40);
+        creature.getPosition().getY() + 40);
   }
 
   public void drawFood(Food food) {

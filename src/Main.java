@@ -12,7 +12,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     MainView mainView = new MainView();
-    new Simulator(mainView, new SimulationConfiguration(15, 100, 0.2, 0.7, 1, 50));
+    new Simulator(mainView, new SimulationConfiguration(15, 100, 0.1, 0.7, 1, 100));
 
     Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 

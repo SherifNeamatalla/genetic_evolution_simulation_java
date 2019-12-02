@@ -19,7 +19,7 @@ public class CreatureChromosome {
   public CreatureChromosome(CreatureGene gene, Position position) {
     this.position = position;
     this.creatureName = CreatureNameGiver.getNextCount();
-    this.energy = 100;
+    this.energy = CreatureGeneConstants.MAX_ENERGY;
     this.gene = gene;
     this.xDirection = ThreadLocalRandom.current().nextInt(2) == 1 ? 1 : -1;
     this.yDirection = ThreadLocalRandom.current().nextInt(2) == 1 ? 1 : -1;
@@ -69,9 +69,9 @@ public class CreatureChromosome {
       }
     }
     if (ateFood != null) {
-      this.energy =
-          (this.energy + CreatureGeneConstants.FOOD_REWARD)
-              % (CreatureGeneConstants.MAX_ENERGY + 1);
+      this.energy += CreatureGeneConstants.FOOD_REWARD;
+      if (this.energy > CreatureGeneConstants.MAX_ENERGY)
+        this.energy = CreatureGeneConstants.MAX_ENERGY;
       foods.remove(ateFood);
       this.foodCount++;
     }

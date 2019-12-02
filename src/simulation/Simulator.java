@@ -87,14 +87,7 @@ public class Simulator {
             this.simulationResult.getPopulation());
 
     this.mainView.refreshSidebar(this.simulationResult);
-
-    for (CreatureChromosome creatureChromosome : this.simulationResult.getPopulation()) {
-      creatureChromosome.setEnergy(CreatureGeneConstants.MAX_ENERGY);
-      creatureChromosome.setFoodCount(0);
-    }
   }
-
-  private void simulate(ActionEvent actionEvent) {}
 
   public void start(int generationsCount) {
     this.generationsCount = generationsCount;
@@ -102,6 +95,8 @@ public class Simulator {
       creatureChromosome.setPosition(PositionCreator.buildRandomPosition());
       this.simulationResult.setFood(
           FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
+      //creatureChromosome.setEnergy(CreatureGeneConstants.MAX_ENERGY);
+      creatureChromosome.setFoodCount(0);
     }
     this.timeline.play();
   }

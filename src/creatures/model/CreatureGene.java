@@ -39,7 +39,23 @@ public class CreatureGene extends Gene {
   }
 
   public void mutateGene() {
-    this.randomizeGene();
+    int randomValue = ThreadLocalRandom.current().nextInt(3);
+    if(randomValue == 0)this.visionRange =
+            ThreadLocalRandom.current()
+                    .nextDouble(
+                            CreatureGeneConstants.MIN_VISION_RANGE, CreatureGeneConstants.MAX_VISION_RANGE);
+    else if (randomValue == 1){
+      this.speedPixelsPerTick =
+              ThreadLocalRandom.current()
+                      .nextDouble(CreatureGeneConstants.MIN_SPEED, CreatureGeneConstants.MAX_SPEED);
+    }
+    else if(randomValue == 2)
+    {
+      this.energyDecayPerTick =
+              ThreadLocalRandom.current()
+                      .nextDouble(CreatureGeneConstants.MIN_ENERGY_DECAY_PER_SECOND, CreatureGeneConstants.MAX_ENERGY_DECAY_PER_SECOND);
+    }
+
   }
 
   public double getEnergyDecayPerTick() {

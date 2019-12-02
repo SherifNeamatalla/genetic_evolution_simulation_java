@@ -4,6 +4,7 @@ import creatures.CreatureGenesCreator;
 import creatures.PositionCreator;
 import creatures.model.CreatureChromosome;
 import creatures.model.CreatureGene;
+import creatures.model.CreatureGeneConstants;
 import geneticalgorithm.interfaces.IPopulationCreator;
 import geneticalgorithm.interfaces.IScoreEvaluator;
 
@@ -65,23 +66,26 @@ public class CreaturePopulationCreator implements IPopulationCreator {
       double crossoverRate,
       IScoreEvaluator scoreEvaluator,
       int creaturesCount) {
+    if (population.size() <= 1) return population;
     Random random = new Random(System.currentTimeMillis());
 
     List<CreatureChromosome> newPopulation = new ArrayList<>();
 
     Collections.shuffle(population);
 
-    for (int i = 0; i < population.size() - 1; i++, i++) {
-      var parent1 = population.get(i);
-      var parent2 = population.get((i + 1));
+    List<CreatureChromosome> successfulCreatures =
+        population.stream()
+            .filter(
+                c -> c.getEnergy() > CreatureGeneConstants.MAX_ENERGY / 2 && c.getFoodCount() > 0)
+            .collect(Collectors.toList());
+
+    for (int i = 0;
+        i < successfulCreatures.size() - 1 && newPopulation.size() < creaturesCount;
+        i++, i++) {
+      var parent1 = successfulCreatures.get(i);
+      var parent2 = successfulCreatures.get((i + 1));
 
       double randomValue = random.nextDouble();
-
-      var clone1 = new CreatureChromosome((parent1.getGene()), parent1.getPosition());
-      var clone2 = new CreatureChromosome((parent2.getGene()), parent2.getPosition());
-
-      newPopulation.add(clone1);
-      newPopulation.add(clone2);
 
       if (randomValue < crossoverRate) {
         var child1 = newOffspring(parent1, parent2);
@@ -90,6 +94,8 @@ public class CreaturePopulationCreator implements IPopulationCreator {
       }
     }
 
+    // All old population survives.
+    newPopulation.addAll(population);
     return newPopulation;
   }
 
