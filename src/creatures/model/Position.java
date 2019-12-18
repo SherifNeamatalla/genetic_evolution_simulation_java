@@ -10,6 +10,11 @@ public class Position {
     this.y = y;
   }
 
+  public Position(Position position) {
+    x = position.x;
+    y = position.y;
+  }
+
   public double getX() {
     return x;
   }

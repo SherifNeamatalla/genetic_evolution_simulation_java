@@ -2,17 +2,20 @@ package simulation.model;
 
 public class SimulationConfiguration {
 
-  private int ticksPerRound = 15;
-  private int startPopulationCount = 100;
+  private int ticksPerRound;
+  private int startPopulationCount;
 
-  private double mutationRate = 0.2;
+  private double mutationRate;
 
-  private double crossoverRate = 0.7;
+  private double crossoverRate;
 
-  private int ticksPerSecond = 1;
+  private int ticksPerSecond;
 
-  private int foodCount = 50;
+  private int foodCount;
 
+  private double suddenDeathRate;
+
+  private double topPopulationRate;
 
   public SimulationConfiguration(
       int ticksPerRound,
@@ -20,13 +23,17 @@ public class SimulationConfiguration {
       double mutationRate,
       double crossoverRate,
       int ticksPerSecond,
-      int foodCount) {
+      int foodCount,
+      double suddenDeathRate,
+      double topPopulationRate) {
     this.ticksPerRound = ticksPerRound;
     this.startPopulationCount = startPopulationCount;
     this.mutationRate = mutationRate;
     this.crossoverRate = crossoverRate;
     this.ticksPerSecond = ticksPerSecond;
     this.foodCount = foodCount;
+    this.suddenDeathRate = suddenDeathRate;
+    this.topPopulationRate = topPopulationRate;
   }
 
   public int getTicksPerRound() {
@@ -75,5 +82,21 @@ public class SimulationConfiguration {
 
   public void setFoodCount(int foodCount) {
     this.foodCount = foodCount;
+  }
+
+  public double getSuddenDeathRate() {
+    return suddenDeathRate;
+  }
+
+  public void setSuddenDeathRate(double suddenDeathRate) {
+    this.suddenDeathRate = suddenDeathRate;
+  }
+
+  public double getTopPopulationRate() {
+    return topPopulationRate;
+  }
+
+  public void setTopPopulationRate(double topPopulationRate) {
+    this.topPopulationRate = topPopulationRate;
   }
 }

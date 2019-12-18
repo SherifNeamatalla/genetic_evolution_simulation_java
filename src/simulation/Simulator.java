@@ -3,18 +3,18 @@ package simulation;
 import controller.AlgorithmController;
 import creatures.PositionCreator;
 import creatures.implementations.CreatureMutationManager;
-import creatures.implementations.CreaturePopulationCreator;
+import creatures.implementations.CreaturePopulationCreatorNoDeathRate;
 import creatures.implementations.CreatureScoreEvaluator;
 import creatures.model.CreatureChromosome;
-import creatures.model.CreatureGeneConstants;
 import geneticalgorithm.AlgorithmLogger;
+import geneticalgorithm.model.GenerationMetaInformation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import simulation.helper.FoodGenerator;
+import simulation.model.Simulation;
 import simulation.model.SimulationConfiguration;
-import simulation.model.SimulationResult;
 import view.MainView;
 
 public class Simulator {
@@ -25,9 +25,11 @@ public class Simulator {
 
   private AlgorithmController algorithmController;
 
-  private SimulationResult simulationResult;
+  private Simulation simulation;
 
   private SimulationConfiguration simulationConfiguration;
+
+  private GenerationMetaInformation lastGenerationMetaInformation;
 
   private int generationsCount = 1;
 
@@ -36,66 +38,75 @@ public class Simulator {
     this.simulationConfiguration = simulationConfiguration;
     this.algorithmController =
         new AlgorithmController(
-            new CreaturePopulationCreator(),
+            new CreaturePopulationCreatorNoDeathRate(),
             new CreatureScoreEvaluator(),
             new CreatureMutationManager());
 
     AlgorithmLogger.BEST_RESULT_LOGGING_ENABLED = true;
 
-    this.simulationResult =
-        this.algorithmController.getNextGeneration(
-            generationsCount,
-            simulationConfiguration.getStartPopulationCount(),
-            simulationConfiguration.getMutationRate(),
-            simulationConfiguration.getCrossoverRate(),
-            0,
-            null);
-    this.simulationResult.setFood(
-        FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
+    this.simulation =
+        new Simulation(
+            this.algorithmController.getNextGeneration(
+                simulationConfiguration.getStartPopulationCount(),
+                simulationConfiguration.getMutationRate(),
+                simulationConfiguration.getCrossoverRate(),
+                simulationConfiguration.getTopPopulationRate(),
+                simulationConfiguration.getSuddenDeathRate(),
+                null));
+    this.simulation.setFood(FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
+
+    this.lastGenerationMetaInformation =
+        algorithmController.getGenerationMetaInformation(
+            this.generationsCount, this.simulation.getPopulation());
+    this.generationsCount++;
 
     KeyFrame keyFrame =
         new KeyFrame(
-            Duration.millis(simulationConfiguration.getTicksPerSecond() * 1000),
+            Duration.millis(simulationConfiguration.getTicksPerSecond() * 256),
             actionEvent -> {
-              this.simulationResult
+              this.simulation
                   .getPopulation()
                   .forEach(
                       creatureChromosome -> {
-                        creatureChromosome.liveTick(this.simulationResult.getFood());
+                        creatureChromosome.liveTick(this.simulation.getFood());
                       });
-              this.mainView.draw(this.simulationResult);
+              this.mainView.draw(this.simulation);
             });
 
     this.mainView.connect(this);
-
     this.timeline = new Timeline(keyFrame);
     this.timeline.setCycleCount(simulationConfiguration.getTicksPerRound());
     this.timeline.setOnFinished(this::onSimulationDone);
-    this.mainView.draw(this.simulationResult);
-    this.mainView.refreshSidebar(this.simulationResult);
+   // this.mainView.draw(this.simulation);
+    this.mainView.refreshSidebar(this.lastGenerationMetaInformation);
     this.mainView.refreshSidebarConfigurationTextValue(this.simulationConfiguration);
   }
 
   private void onSimulationDone(ActionEvent actionEvent) {
-    this.simulationResult =
-        this.algorithmController.getNextGeneration(
-            generationsCount,
-            simulationConfiguration.getStartPopulationCount(),
-            simulationConfiguration.getMutationRate(),
-            simulationConfiguration.getCrossoverRate(),
-            0,
-            this.simulationResult.getPopulation());
 
-    this.mainView.refreshSidebar(this.simulationResult);
+    this.lastGenerationMetaInformation =
+        algorithmController.getGenerationMetaInformation(
+            this.generationsCount, this.simulation.getPopulation());
+    this.generationsCount++;
+
+    this.mainView.refreshSidebar(this.lastGenerationMetaInformation);
+
+    this.simulation =
+        new Simulation(
+            this.algorithmController.getNextGeneration(
+                simulationConfiguration.getStartPopulationCount(),
+                simulationConfiguration.getMutationRate(),
+                simulationConfiguration.getCrossoverRate(),
+                simulationConfiguration.getSuddenDeathRate(),
+                0,
+                this.simulation.getPopulation()));
   }
 
-  public void start(int generationsCount) {
-    this.generationsCount = generationsCount;
-    for (CreatureChromosome creatureChromosome : this.simulationResult.getPopulation()) {
+  public void start() {
+    for (CreatureChromosome creatureChromosome : this.simulation.getPopulation()) {
       creatureChromosome.setPosition(PositionCreator.buildRandomPosition());
-      this.simulationResult.setFood(
-          FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
-      //creatureChromosome.setEnergy(CreatureGeneConstants.MAX_ENERGY);
+      this.simulation.setFood(FoodGenerator.generateFood(simulationConfiguration.getFoodCount()));
+      // creatureChromosome.setEnergy(CreatureGeneConstants.MAX_ENERGY);
       creatureChromosome.setFoodCount(0);
     }
     this.timeline.play();
@@ -105,8 +116,8 @@ public class Simulator {
     this.timeline.stop();
   }
 
-  public SimulationResult getSimulationResult() {
+  public Simulation getSimulation() {
 
-    return simulationResult;
+    return simulation;
   }
 }

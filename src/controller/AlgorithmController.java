@@ -2,42 +2,44 @@ package controller;
 
 import creatures.model.CreatureChromosome;
 import creatures.model.CreatureGene;
+import geneticalgorithm.AlgorithmStatisticsController;
 import geneticalgorithm.MainAlgorithm;
 import geneticalgorithm.interfaces.IMutationManager;
 import geneticalgorithm.interfaces.IPopulationCreator;
 import geneticalgorithm.interfaces.IScoreEvaluator;
-import simulation.model.SimulationResult;
+import geneticalgorithm.model.GenerationMetaInformation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AlgorithmController {
 
   private MainAlgorithm<CreatureGene> mainAlgorithm;
+  private AlgorithmStatisticsController algorithmStatisticsController;
 
   public AlgorithmController(
       IPopulationCreator populationCreator,
       IScoreEvaluator scoreEvaluator,
       IMutationManager mutationManager) {
     this.mainAlgorithm = new MainAlgorithm<>(populationCreator, mutationManager, scoreEvaluator);
+    this.algorithmStatisticsController = new AlgorithmStatisticsController(scoreEvaluator);
   }
 
-  public SimulationResult getNextGeneration(
-      int generationPerClick,
+  public List<CreatureChromosome> getNextGeneration(
       int populationCount,
       double mutationRate,
       double crossoverRate,
       double topSurvivorsPercentage,
+      double suddenDeathRate,
       List<CreatureChromosome> population) {
 
-    if (population == null || population.size() == 0) population = new ArrayList<>();
+    return mainAlgorithm.getNextGeneration(
+        populationCount, mutationRate, crossoverRate, topSurvivorsPercentage,suddenDeathRate, population);
+  }
 
-    SimulationResult simulationResult = null;
-    for (int i = 0; i < generationPerClick; i++) {
-      simulationResult =
-          mainAlgorithm.getNextGeneration(
-              1, populationCount, mutationRate, crossoverRate, topSurvivorsPercentage, population);
-    }
-    return simulationResult;
+  public GenerationMetaInformation getGenerationMetaInformation(
+      int generationCount, List<CreatureChromosome> population) {
+
+    return this.algorithmStatisticsController.getGenerationMetaInformation(
+        generationCount, population);
   }
 }

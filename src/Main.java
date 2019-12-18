@@ -12,7 +12,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     MainView mainView = new MainView();
-    new Simulator(mainView, new SimulationConfiguration(15, 100, 0.1, 0.7, 1, 100));
+    new Simulator(mainView, new SimulationConfiguration(10, 100, 0.2, 1, 1, 50, 0, 0.2));
 
     Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
@@ -21,7 +21,7 @@ public class Main extends Application {
     primaryStage.setWidth(bounds.getWidth());
     primaryStage.setHeight(bounds.getHeight());
 
-    primaryStage.setTitle("Hello World");
+    primaryStage.setTitle("Genetic Evolution");
     primaryStage.setScene(new Scene(mainView, 300, 275));
     primaryStage.show();
   }

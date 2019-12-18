@@ -6,7 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import simulation.model.Food;
-import simulation.model.SimulationResult;
+import simulation.model.Simulation;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class CreaturesCanvas extends Canvas {
     this.getGraphicsContext2D().fillRect(0, 0, this.getWidth(), this.getHeight());
   }
 
-  public void draw(SimulationResult simulation) {
+  public void draw(Simulation simulation) {
 
     List<CreatureChromosome> creatures = simulation.getPopulation();
     List<Food> food = simulation.getFood();
@@ -43,10 +43,10 @@ public class CreaturesCanvas extends Canvas {
 
     gc.setFill(Color.BLACK);
     if (creature.getEnergy() <= 0) gc.setFill(Color.RED);
-    else if (creature.getFoodCount() > 0 && creature.getEnergy() > CreatureGeneConstants.MAX_ENERGY/2)
-      gc.setFill(Color.SILVER);
-    else if (creature.getFoodCount() > 0 )
-      gc.setFill(Color.BLUE);
+    else if (creature.getEnergy() < CreatureGeneConstants.MAX_ENERGY / 10) gc.setFill(Color.ORANGE);
+    else if (creature.getFoodCount() > 0
+        && creature.getEnergy() > CreatureGeneConstants.MAX_ENERGY / 2) gc.setFill(Color.SILVER);
+    else if (creature.getFoodCount() > 0) gc.setFill(Color.BLUE);
     gc.fillText(
         ""
             + String.format("%.2f", creature.getEnergy())

@@ -1,11 +1,12 @@
 package view;
 
 import creatures.model.CreatureChromosome;
+import geneticalgorithm.model.GenerationMetaInformation;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import simulation.Simulator;
+import simulation.model.Simulation;
 import simulation.model.SimulationConfiguration;
-import simulation.model.SimulationResult;
 import view.helper.TextValueExtractor;
 
 public class MainView extends BorderPane {
@@ -23,31 +24,30 @@ public class MainView extends BorderPane {
     this.setCenter(creaturesCanvas);
   }
 
-  public void nextGeneration(int generationsCount) {
+  public void nextGeneration() {
 
-    this.simulator.start(generationsCount);
-    SimulationResult simulationResult = this.simulator.getSimulationResult();
+    this.simulator.start();
+    Simulation simulation = this.simulator.getSimulation();
 
-    this.draw(simulationResult);
-
-    refreshSidebar(simulationResult);
+    this.draw(simulation);
   }
 
-  public void refreshSidebar(SimulationResult simulationResult) {
+  public void refreshSidebar(GenerationMetaInformation generationMetaInformation) {
     this.appSidebar.setBestPlaceText(
-        TextValueExtractor.getChromosomeTextValue(simulationResult.getBestCreature()));
+        TextValueExtractor.getChromosomeTextValue(generationMetaInformation.getBestCreature()));
     this.appSidebar.setAveragePlaceText(
-        TextValueExtractor.getChromosomeTextValue(simulationResult.getAverageCreature()));
+        TextValueExtractor.getChromosomeTextValue(generationMetaInformation.getAverageCreature()));
 
     this.appSidebar.setWorstPlaceText(
-        TextValueExtractor.getChromosomeTextValue(simulationResult.getWorstCreature()));
+        TextValueExtractor.getChromosomeTextValue(generationMetaInformation.getWorstCreature()));
     this.appSidebar.setGeneralInformationText(
-        TextValueExtractor.getSimulationResultTextValue(simulationResult));
+        TextValueExtractor.getSimulationResultTextValue(generationMetaInformation));
   }
 
-  public void refreshSidebarConfigurationTextValue(SimulationConfiguration simulationConfiguration){
+  public void refreshSidebarConfigurationTextValue(
+      SimulationConfiguration simulationConfiguration) {
     this.appSidebar.setSimulationConfigurationText(
-            TextValueExtractor.getSimulationConfigurationTextValue(simulationConfiguration));
+        TextValueExtractor.getSimulationConfigurationTextValue(simulationConfiguration));
   }
 
   public void connect(Simulator simulator) {
@@ -56,11 +56,11 @@ public class MainView extends BorderPane {
 
   public void start() {
 
-    this.simulator.start(1);
+    this.simulator.start();
   }
 
-  public void draw(SimulationResult simulationResult) {
-    this.creaturesCanvas.draw(simulationResult);
+  public void draw(Simulation simulation) {
+    this.creaturesCanvas.draw(simulation);
   }
 
   public void drawCreature(CreatureChromosome creatureChromosome) {

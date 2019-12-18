@@ -36,11 +36,11 @@ public class AppSidebar extends VBox {
     this.generalInformationTextArea = new TextArea();
     this.simulationConfigurationTextArea = new TextArea();
 
-    this.bestTextArea.setDisable(true);
-    this.averageTextArea.setDisable(true);
-    this.worstTextArea.setDisable(true);
-    this.generalInformationTextArea.setDisable(true);
-    this.simulationConfigurationTextArea.setDisable(true);
+    this.bestTextArea.setEditable(false);
+    this.averageTextArea.setEditable(false);
+    this.worstTextArea.setEditable(false);
+    this.generalInformationTextArea.setEditable(false);
+    this.simulationConfigurationTextArea.setEditable(false);
 
 
     this.getChildren().add(new Label("Simulation configuration "));

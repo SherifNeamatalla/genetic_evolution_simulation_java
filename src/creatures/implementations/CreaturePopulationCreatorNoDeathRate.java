@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class CreaturePopulationCreator implements IPopulationCreator {
+public class CreaturePopulationCreatorNoDeathRate implements IPopulationCreator {
 
   @Override
   public List<CreatureChromosome> newGeneration(int populationCount) {
@@ -55,7 +55,10 @@ public class CreaturePopulationCreator implements IPopulationCreator {
     }
     CreatureGene newChild = new CreatureGene(energyDecayPerTrick, range, speedPixelsPerTick);
 
-    return new CreatureChromosome(newChild, parent1.getPosition());
+    // an experiment, hoping this makes sure the gene pool doesn't get too narrow from the beginning
+
+      return new CreatureMutationManager()
+          .mutateCreatureChromosome(new CreatureChromosome(newChild, parent1.getPosition()), 1);
   }
 
   @Override
@@ -104,26 +107,6 @@ public class CreaturePopulationCreator implements IPopulationCreator {
       double topSurvivorsPercentage,
       double suddenDeathRate) {
 
-
-    Random random = new Random(System.currentTimeMillis());
-    List<CreatureChromosome> aliveCreatures =
-        population.stream().filter(p -> p.getEnergy() > 0).collect(Collectors.toList());
-
-    List<CreatureChromosome> survivingCreatures = new ArrayList<>(aliveCreatures);
-
-
-    int startIndex = ((int) topSurvivorsPercentage * aliveCreatures.size()) ;
-    var bottomCreatures = aliveCreatures.subList(startIndex, aliveCreatures.size());
-
-    for (CreatureChromosome creatureChromosome : bottomCreatures) {
-
-      double randomValue = random.nextDouble();
-
-      if (randomValue <= suddenDeathRate) {
-        survivingCreatures.remove(creatureChromosome);
-      }
-    }
-
-    return survivingCreatures;
+    return population.stream().filter(p -> p.getEnergy() > 0).collect(Collectors.toList());
   }
 }

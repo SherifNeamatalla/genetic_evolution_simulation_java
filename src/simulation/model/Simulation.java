@@ -5,13 +5,13 @@ import creatures.model.CreatureChromosome;
 import java.util.List;
 
 public class Simulation {
+
   private List<CreatureChromosome> population;
 
   private List<Food> food;
 
-  public Simulation(List<CreatureChromosome> population, List<Food> food) {
+  public Simulation(List<CreatureChromosome> population) {
     this.population = population;
-    this.food = food;
   }
 
   public List<CreatureChromosome> getPopulation() {

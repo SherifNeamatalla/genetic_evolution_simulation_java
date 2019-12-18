@@ -27,4 +27,7 @@ public class CreatureGeneConstants {
 
   public static final int FOOD_REWARD = 25;
   public static final double SURVIVAL_REWARD = 0;
+
+  // For forcing creatures to seek for food.. or DIE!
+  public static final double PER_TICK_DEFAULT_DECAY = 2;
 }

@@ -26,11 +26,22 @@ public class CreatureChromosome {
     this.foodCount = 0;
   }
 
+  public CreatureChromosome(CreatureChromosome creatureChromosome) {
+    creatureName = creatureChromosome.creatureName;
+    energy = creatureChromosome.energy;
+    gene = new CreatureGene(creatureChromosome.gene);
+    position = new Position(creatureChromosome.position);
+    xDirection = creatureChromosome.xDirection;
+    yDirection = creatureChromosome.yDirection;
+    foodCount = creatureChromosome.foodCount;
+  }
+
   public void liveTick(List<Food> food) {
     // Dead
     if (this.energy <= 0) return;
     this.move(food);
     this.energy -= this.gene.getEnergyDecayPerTick();
+    this.energy -= CreatureGeneConstants.PER_TICK_DEFAULT_DECAY;
   }
 
   private void move(List<Food> foods) {

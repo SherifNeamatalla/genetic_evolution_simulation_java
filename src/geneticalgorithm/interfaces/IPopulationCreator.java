@@ -55,7 +55,8 @@ public interface IPopulationCreator {
   default List<CreatureChromosome> getCrossoverPool(
       List<CreatureChromosome> population,
       IScoreEvaluator scoreEvaluator,
-      double topSurvivorsPercentage) {
+      double topSurvivorsPercentage,
+      double suddenDeathRate) {
 
     List<CreatureChromosome> populationCopy =
         population.stream()

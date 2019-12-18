@@ -44,6 +44,6 @@ public class AppToolbar extends HBox {
     int generationsCount = 1;
     String text = this.generationsCount.getText();
     if (text != null && !text.isEmpty()) generationsCount = Integer.parseInt(text);
-    if (text == null) this.mainView.nextGeneration(generationsCount);
+    if (text == null) this.mainView.nextGeneration();
   }
 }
